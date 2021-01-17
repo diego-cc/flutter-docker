@@ -1,6 +1,7 @@
 FROM openjdk:8
 
-ARG VERSION=1.17.1
+ARG FLUTTER_VERSION=1.22.5
+ARG ANDROID_API_LEVEL=29
 
 ENV ANDROID_HOME /android_sdk
 ENV ANDROID_NDK_HOME ${ANDROID_HOME}/ndk
@@ -13,7 +14,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 	apt-get install nodejs && \
 	npm install -g appcenter-cli
 
-RUN curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_${VERSION}-stable.tar.xz --output /flutter.tar.xz && \
+RUN curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz --output /flutter.tar.xz && \
 	tar xf flutter.tar.xz && \
 	rm flutter.tar.xz
 
@@ -32,6 +33,6 @@ ENV PATH $PATH:/flutter/bin:/flutter/bin/cache/dart-sdk/bin:$ANDROID_HOME/tools/
 
 RUN yes | sdkmanager --licenses && \
 	sdkmanager --update && \
-	sdkmanager tools platform-tools emulator "build-tools;29.0.2" "platforms;android-29" > /dev/null
+	sdkmanager tools platform-tools emulator "build-tools;29.0.2" "platforms;android-${ANDROID_API_LEVEL}" > /dev/null
 
 RUN flutter doctor
